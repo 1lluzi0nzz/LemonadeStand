@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferStrategy;
+
 import javax.swing.*;
 
 public class Engine implements Runnable{
@@ -9,6 +11,9 @@ public class Engine implements Runnable{
 	public Canvas canvas;
 	public String title;
 	public int width, height;
+	
+	public BufferStrategy bs;
+	public Graphics g;
 	
 	private Thread thread;
 	public boolean running = false;
@@ -36,13 +41,25 @@ public class Engine implements Runnable{
 		
 	}
 	public static void init() {
-		new Engine("", 800, 600);
+		//new Engine(title, width, height);
 	}
 	public void tick() {
 		
 	}
 	public void render() {
-	
+		bs = canvas.getBufferStrategy();
+		if(bs == null) {
+			canvas.createBufferStrategy(3);
+			return;
+		}
+		g = bs.getDrawGraphics();
+		g.fillRect(0, 0, width, height);
+		g.setColor(Color.red);
+		
+		
+		g.drawString("Lemonade Stand", 50, 50);
+		bs.show();
+		g.dispose();
 	}
 	public void run() {
 		init();
@@ -57,6 +74,7 @@ public class Engine implements Runnable{
 		if(running) {
 			return;
 		}
+		running = true;
 		thread = new Thread(this);
 		thread.start();
 	}
@@ -72,7 +90,8 @@ public class Engine implements Runnable{
 	}
 
 	public static void main(String[] args) {
-		init();
+		Engine eng = new Engine("", 800, 600);
+		eng.start();
 	}
 
 }
