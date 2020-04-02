@@ -13,6 +13,7 @@ public class Engine implements Runnable{
 	private Thread thread;
 	public boolean running = false;
 	
+	//Engine class creates window
 	public Engine(String title, int width, int height) {
 		this.title = title;
 		this.width = width;
