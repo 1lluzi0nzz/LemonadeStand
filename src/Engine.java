@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 
@@ -18,7 +19,8 @@ public class Engine implements Runnable{
 	private Thread thread;
 	public boolean running = false;
 	
-	//Engine class creates window
+	public BufferedImage logo;
+	
 	public Engine(String title, int width, int height) {
 		this.title = title;
 		this.width = width;
@@ -40,8 +42,8 @@ public class Engine implements Runnable{
 		frame.pack();
 		
 	}
-	public static void init() {
-		//new Engine(title, width, height);
+	public void init() {
+		logo = Utilities.loadImage("logo.png");
 	}
 	public void tick() {
 		
@@ -56,7 +58,7 @@ public class Engine implements Runnable{
 		g.clearRect(0, 0, width, height);
 		g.fillRect(0, 0, width, height);
 		g.setColor(Color.yellow);
-		g.drawImage(new Image("res/logo.png"), 0, 0);
+		g.drawImage(logo, 0, 0, null);
 		
 		
 		g.drawString("Lemonade Stand", 360, 30);
