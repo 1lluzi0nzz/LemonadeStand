@@ -53,11 +53,13 @@ public class Engine implements Runnable{
 			return;
 		}
 		g = bs.getDrawGraphics();
+		g.clearRect(0, 0, width, height);
 		g.fillRect(0, 0, width, height);
-		g.setColor(Color.red);
+		g.setColor(Color.yellow);
+		g.drawImage(new Image("res/logo.png"), 0, 0);
 		
 		
-		g.drawString("Lemonade Stand", 50, 50);
+		g.drawString("Lemonade Stand", 360, 30);
 		bs.show();
 		g.dispose();
 	}
