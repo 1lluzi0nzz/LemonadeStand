@@ -11,13 +11,14 @@ public class Engine implements Runnable{
 	public JFrame frame;
 	public Canvas canvas;
 	public String title;
-	public int width, height;
+	public static int width, height;
 	public BufferStrategy bs;
 	public Graphics g;
 	private Thread thread;
 	public boolean running = false;
 	
-	public int x = 0;
+	public State mainMenuState;
+	
 	
 	public Engine(String title, int width, int height) {
 		this.title = title;
@@ -42,9 +43,13 @@ public class Engine implements Runnable{
 	}
 	public void init() {
 		Assets.init();
+		mainMenuState = new MainMenuState();
+		State.setState(mainMenuState);
 	}
 	public void tick() {
-		x+= 3;
+		if(State.getState() != null) {
+			State.getState().tick();
+		}
 	}
 	public void render() {
 		bs = canvas.getBufferStrategy();
@@ -53,23 +58,10 @@ public class Engine implements Runnable{
 			return;
 		}
 		g = bs.getDrawGraphics();
-		g.clearRect(0, 0, width, height);
-		g.fillRect(0, 0, width, height);
-		g.setColor(Color.yellow); 
-		g.drawString("Lemonade Stand", 360, 30);
-		g.fillRect(40, 150, 200, 20);
-		g.fillRect(40, 250, 200, 20);
-		g.fillRect(40, 350, 200, 20);
-		g.setColor(Color.black);
-		g.drawString("START", 120, 165);
-		g.drawString("OPTIONS", 115, 265);
-		g.drawString("EXIT", 125, 365);
-		
-		g.drawImage(Assets.lemon, x, 100, null);
-		g.drawImage(Assets.ice, 450, 300, null);
-		
-		
-		
+
+		if(State.getState() != null) {
+			State.getState().render(g);
+		}
 		bs.show();
 		g.dispose();
 	}
