@@ -12,14 +12,12 @@ public class Engine implements Runnable{
 	public Canvas canvas;
 	public String title;
 	public int width, height;
-	
 	public BufferStrategy bs;
 	public Graphics g;
-	
 	private Thread thread;
 	public boolean running = false;
 	
-	public BufferedImage logo;
+	public int x = 0;
 	
 	public Engine(String title, int width, int height) {
 		this.title = title;
@@ -43,10 +41,10 @@ public class Engine implements Runnable{
 		
 	}
 	public void init() {
-		logo = Utilities.loadImage("logo.png");
+		Assets.init();
 	}
 	public void tick() {
-		
+		x+= 3;
 	}
 	public void render() {
 		bs = canvas.getBufferStrategy();
@@ -57,20 +55,51 @@ public class Engine implements Runnable{
 		g = bs.getDrawGraphics();
 		g.clearRect(0, 0, width, height);
 		g.fillRect(0, 0, width, height);
-		g.setColor(Color.yellow);
-		g.drawImage(logo, 0, 0, null);
-		
-		
+		g.setColor(Color.yellow); 
 		g.drawString("Lemonade Stand", 360, 30);
+		g.fillRect(40, 150, 200, 20);
+		g.fillRect(40, 250, 200, 20);
+		g.fillRect(40, 350, 200, 20);
+		g.setColor(Color.black);
+		g.drawString("START", 120, 165);
+		g.drawString("OPTIONS", 115, 265);
+		g.drawString("EXIT", 125, 365);
+		
+		g.drawImage(Assets.lemon, x, 100, null);
+		g.drawImage(Assets.ice, 450, 300, null);
+		
+		
+		
 		bs.show();
 		g.dispose();
 	}
 	public void run() {
 		init();
 		
+		int fps = 60;
+		double timePerTick = 1000000000/fps;
+		double delta = 0;
+		long now;
+		long lastTime = System.nanoTime();
+		long timer = 0;
+		int ticks = 0;
+		
 		while(running) {
-			tick();
-			render();
+			now = System.nanoTime();
+			delta += (now - lastTime)/timePerTick;
+			timer += now - lastTime;
+			lastTime = now;
+			if(delta >= 1) {
+				tick();
+				render();
+				ticks++;
+				delta--;
+			}
+			if(timer >= 1000000000) {
+				System.out.println("FPS: "+ticks);
+				ticks = 0;
+				timer = 0;
+			}
 		}
 		stop();
 	}
